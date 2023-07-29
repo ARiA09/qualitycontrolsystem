@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:f="jakarta.faces.core"
+                xmlns:ui="jakarta.faces.facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/template.xhtml">
+    <ui:define name="content">
+        <div class="card">
+
+            <p:panel id="pnl" header="New Project">
+                <h:form id="productInfo">
+                    <h:panelGrid columns="3" cellpadding="7">
+                        <h:outputLabel style="font-weight: bold;" for="projectName" value="Project Name:"/>
+                        <p:inputText id="projectName" required="true" label="Firstname">
+                            <!--                            <f:validateLength minimum="2"/>-->
+                        </p:inputText>
+                        <p:message for="projectName"/>
+
+                        <p:outputLabel style="font-weight: bold;" for="projectType" value="Project Type:"/>
+                        <p:selectOneMenu id="projectType" required="true">
+                            <f:selectItem itemLabel="Select Project Type" itemValue=""
+                                          noSelectionOption="false"/>
+                            <f:selectItems value=""/>
+                        </p:selectOneMenu>
+                        <p:message for="projectType"/>
+
+                    </h:panelGrid>
+                </h:form>
+
+                <h:form id="samplingPoint">
+                    <p:outputLabel style="font-weight: bold;" value="Select Sampling Points:"/>
+                    <h:panelGrid columns="3" cellpadding="7">
+
+                        <p:column>
+                            <p:outputLabel style="font-weight: bold;" value="City"/>
+                            <p:selectOneListbox id="city" value="#{newProjectFaces.cid}" filter="true"
+                                                filterMatchMode="contains" required="false">
+                                <f:selectItems value="#{newProjectFaces.cities}" var="city" itemLabel="#{city.name}"
+                                               itemValue="#{city.cid}"/>
+                                <p:ajax listener="#{newProjectFaces.onCityChange}" update="samplingPoint:district"/>
+                            </p:selectOneListbox>
+                        </p:column>
+
+                        <p:column>
+                            <p:outputLabel style="font-weight: bold;" value="District"/>
+                            <p:selectOneListbox id="district" value="#{newProjectFaces.did}"
+                                                filter="true" filterMatchMode="contains">
+                                <f:selectItems value="#{newProjectFaces.districts}" var="district"
+                                               itemLabel="#{district.name}" itemValue="#{district.did}"
+                                               required="true"/>
+                                <p:ajax listener="#{newProjectFaces.onDistrictChange()}" update="samplingPoint:ward"/>
+                            </p:selectOneListbox>
+                        </p:column>
+
+                        <p:column>
+                            <p:outputLabel style="font-weight: bold;" value="Ward"/>
+                            <p:selectOneListbox id="ward" value="#{newProjectFaces.wid}"
+                                                filter="true" filterMatchMode="contains">
+                                <f:selectItems value="#{newProjectFaces.wards}" var="ward" itemLabel="#{ward.name}"
+                                               itemValue="#{ward.wid}" required="false"/>
+                            </p:selectOneListbox>
+                        </p:column>
+                    </h:panelGrid>
+                    <p:commandButton type="submit" icon="pi pi-plus" styleClass="mt-3"
+                                     style="left: 15%"
+                                     action="#{newProjectFaces.addSamplingPoint()}" process="samplingPoint @this" update="samplingPointTable"/>
+                </h:form>
+
+                <h:form id="samplingPointTable">
+                    <p:growl id="messages" showDetail="true" />
+                    <p:toolbar>
+                        <p:toolbarGroup>
+                            <p:commandButton id="delete-samplingPoints-button" value="#{newProjectFaces.deleteButtonMessage}"
+                                             icon="pi pi-trash" actionListener="#{newProjectFaces.deleteSamplingPoints}"
+                                             styleClass="ui-button-danger" disabled="#{!newProjectFaces.hasSelectedSamplingPoints()}"
+                                             update="@this">
+                                <p:confirm header="Confirmation" message="Delete the selected Sampling Points?"
+                                           icon="pi pi-exclamation-triangle"/>
+                            </p:commandButton>
+                        </p:toolbarGroup>
+                    </p:toolbar>
+
+                    <p:dataTable id="dt-samplingPoints" widgetVar="dtSamplingPoints" var="samplingPoint"
+                                 value="#{newProjectFaces.samplingPoints}"
+                                 reflow="true" styleClass="products-table"
+                                 selection="#{newProjectFaces.selectedSamplingPoints}"
+                                 rowKey="#{samplingPoint.level3ID}" paginator="true" rows="2" rowSelectMode="add"
+                                 paginatorPosition="bottom">
+                        <f:facet name="header">
+                            <div class="samplingPoints-table-header">
+                                <span style="font-weight: bold">Sampling Points</span>
+                            </div>
+                        </f:facet>
+
+                        <p:ajax event="rowSelect" update=":samplingPointTable:delete-samplingPoints-button"/>
+                        <p:ajax event="rowUnselect" update=":samplingPointTable:delete-samplingPoints-button"/>
+                        <p:ajax event="rowSelectCheckbox" update=":samplingPointTable:delete-samplingPoints-button"/>
+                        <p:ajax event="rowUnselectCheckbox" update=":samplingPointTable:delete-samplingPoints-button"/>
+                        <p:ajax event="toggleSelect" update=":samplingPointTable:delete-samplingPoints-button"/>
+
+                        <p:column selectionMode="multiple" exportable="false"></p:column>
+
+                        <p:column headerText="Level 3 ID " sortBy="#{samplingPoint.level3ID}" filterBy="#{samplingPoint.level3ID}">
+                            <h:outputText value="#{samplingPoint.level3ID}"/>
+                        </p:column>
+                        <p:column headerText="City" sortBy="#{samplingPoint.cityName}" filterBy="#{samplingPoint.cityName}">
+                            <h:outputText value="#{samplingPoint.cityName}"/>
+                        </p:column>
+                        <p:column headerText="District" sortBy="#{samplingPoint.districtName}" filterBy="#{samplingPoint.districtName}">
+                            <h:outputText value="#{samplingPoint.districtName}"/>
+                        </p:column>
+                        <p:column headerText="Ward" sortBy="#{samplingPoint.wardName}" filterBy="#{psamplingPoint.wardName}">
+                            <h:outputText value="#{samplingPoint.wardName}"/>
+                        </p:column>
+                        <p:column exportable="false">
+                            <p:commandButton class="ui-button-warning rounded-button" icon="pi pi-trash"
+                                             process="@this"
+                                             oncomplete="PF('deleteSamplingPointDialog').show()">
+                                <f:setPropertyActionListener value="#{samplingPoint}"
+                                                             target="#{newProjectFaces.selectedSamplingPoint}"/>
+                            </p:commandButton>
+                        </p:column>
+
+                    </p:dataTable>
+                </h:form>
+
+                <h:form id="dialogs">
+                    <p:confirmDialog widgetVar="deleteSamplingPointDialog" showEffect="fade" width="300"
+                                     message="Delete the Sampling Point?" header="Confirm" severity="warn">
+                        <p:commandButton value="Yes" icon="pi pi-check" actionListener="#{newProjectFaces.deleteSamplingPoint()}"
+                                         process="@this" update=":samplingPointTable:delete-samplingPoints-button"
+                                         oncomplete="PF('deleteSamplingPointDialog').hide()"/>
+                        <p:commandButton value="No" type="button" styleClass="ui-button-secondary" icon="pi pi-times"
+                                         onclick="PF('deleteSamplingPointsDialog').hide()"/>
+                    </p:confirmDialog>
+
+                    <p:confirmDialog global="true" showEffect="fade" width="300">
+                        <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes"
+                                         icon="pi pi-check"/>
+                        <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no ui-button-secondary"
+                                         icon="pi pi-times"/>
+                    </p:confirmDialog>
+                </h:form>
+
+                <div>
+                    <p:commandButton id="createBtn" value="Create" icon="pi pi-check"
+                                     styleClass="mt-3"/>
+                </div>
+
+            </p:panel>
+        </div>
+    </ui:define>
+</ui:composition>

@@ -1,0 +1,4 @@
+.ui-menu .ui-menu-parent .ui-menu-child {
+    white-space: nowrap;
+    width: auto !important;
+}

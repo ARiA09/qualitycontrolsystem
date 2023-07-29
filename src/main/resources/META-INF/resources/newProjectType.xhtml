@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:f="jakarta.faces.core"
+                xmlns:ui="jakarta.faces.facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pe="http://primefaces.org/ui/extensions"
+                template="/template.xhtml">
+    <ui:define name="content">
+        <div class="card">
+            <h:form>
+                <p:panel id="pnl" header="New Project">
+                    <h:panelGrid columns="3" cellpadding="7">
+                        <h:outputLabel for="projectName" value="Project Name: *"/>
+                        <p:inputText id="projectName" required="true" label="Firstname">
+                            <f:validateLength minimum="2"/>
+                        </p:inputText>
+                        <p:message for="projectName"/>
+
+                        <h:outputLabel for="lastname" value="Lastname: *"/>
+                        <p:inputText id="lastname" required="true" label="Lastname"/>
+                        <p:message for="lastname"/>
+                    </h:panelGrid>
+
+                    <p:commandButton id="saveBtn" value="Save" icon="pi pi-check"
+                                     styleClass="mt-3"/>
+                </p:panel>
+            </h:form>
+        </div>
+    </ui:define>
+</ui:composition>

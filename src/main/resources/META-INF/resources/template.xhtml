@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="en-us"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:ui="jakarta.faces.facelets"
+      xmlns:p="http://primefaces.org/ui"
+>
+
+<h:head>
+    <title>.:: Quality Control System ::.</title>
+    <meta content='text/html; charset=UTF-8' http-equiv="Content-Type"/>
+    <h:outputStylesheet library="css" name="customStyle.css"/>
+    <ui:insert name="header"/>
+</h:head>
+
+<h:body>
+    <div class="card">
+        <h:form id="menuForm">
+            <p:growl id="messages"/>
+
+            <p:menubar>
+                <p:submenu label="File" icon="pi pi-fw pi-file">
+                    <p:submenu label="New" icon="pi pi-fw pi-plus">
+                        <p:menuitem value="Create New Project" icon="pi pi-fw pi-file" outcome="newProject"/>
+                        <p:menuitem value="Create New Project Type" icon="pi pi-fw pi-hashtag"
+                                    outcome="newProjectType"/>
+                    </p:submenu>
+                    <p:menuitem value="Open" icon="pi pi-fw pi-folder-open" outcome="projectDetail"/>
+                </p:submenu>
+
+                <p:divider layout="vertical"/>
+
+                <f:facet name="options">
+                    <div class="ui-input-icon-left mr-2">
+                        <i class="pi pi-fw pi-search"/>
+                        <p:inputText placeholder="Search"/>
+                    </div>
+                    <p:commandButton value="Quit" icon="pi pi-fw pi-power-off" action="#{menuBar.shutDown()}"
+                                     styleClass="ui-button-danger"/>
+                </f:facet>
+            </p:menubar>
+        </h:form>
+    </div>
+    <ui:insert name="content"/>
+</h:body>
+</html>

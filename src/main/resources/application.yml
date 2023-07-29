@@ -1,0 +1,26 @@
+joinfaces:
+  primefaces:
+    theme: saga
+
+  faces:
+    project-stage: Production
+
+  server:
+    shutdown: graceful
+
+  spring:
+    lifecycle:
+      timeout-per-shutdown-phase: "30s"
+
+#    autoconfigure:
+#      exclude: org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+#    datasource:
+#      driverClassName: org.postgresql.Driver
+#      url: jdbc:postgresql://localhost:5433/qcsystem
+#      username: qcsystem
+#      password: navyseal
+#
+#      driver-class-name: org.postgresql.Driver
+
+    jpa:
+      generate-ddl: true
